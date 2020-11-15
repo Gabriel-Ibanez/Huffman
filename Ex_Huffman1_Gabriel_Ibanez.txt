@@ -1,0 +1,75 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println("================================================================");
+        System.out.println("IESB 20201 - Análise de Algoritmos - Professor Felippe Rodrigues");
+        System.out.println("Programa Compressor Tamanho Fixo   - Gabriel Ibañez - 1812130004");
+        System.out.println("================================================================\n");
+
+        // carregando o arquivo texto
+        File file = new File("C:\\Users\\ibane\\Desktop\\1GABRIEL\\2020\\IESB 2020\\DISCIPLINAS 20201\\Análise de Algoritmos\\Huffman\\S2.txt");
+        
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+        List<String> textoOriginal = new ArrayList<String>();
+        List<Character> listaDeCaracteres = new ArrayList<>();
+
+        int frequenciaTotal = 0;
+        char carac;
+
+        while ( (carac = (char) bufferedReader.read()) != 65535) {
+            if (carac == '\r') carac = '¬';
+            if (carac == '\n') carac = '¨';
+            if(!listaDeCaracteres.contains(carac)) {
+                listaDeCaracteres.add(carac);
+                frequenciaTotal++;
+            } else {
+                frequenciaTotal++;
+            }
+            textoOriginal.add(""+carac);
+        }
+
+        System.out.println("Dados do arquivo:");
+        System.out.println("\tTotal de carateres no arquivo: " + frequenciaTotal);
+        System.out.println("\tTotal de caracteres distintos: "+listaDeCaracteres.size());
+        System.out.println("\tObs.: a quebra de linha foi representada pelos caracteres ¬ e ¨");
+
+        int qtdbits = 0;
+        while (Math.pow(2,qtdbits) < listaDeCaracteres.size() ){
+            qtdbits++;
+        }
+        System.out.println("\n\tComo o arquivo possui "+listaDeCaracteres.size()+" caracteres distintos, a menor codificação");
+        System.out.println("\tque se pode utilizar para representá-lo em binário é de "+ qtdbits +" bits por");
+        System.out.println("\tcaractere, obtendo assim a seguinte codificação:\n");
+
+        String a; int tam5 = 0;
+        String complemento = "";
+        for (int i = 0; i < listaDeCaracteres.size(); i++){
+            tam5 = Integer.toBinaryString(i).length();
+            while (tam5 < 6)
+            {
+                complemento = complemento + "0";
+                tam5++;
+            }
+            System.out.println("\t\tCaracter "+ listaDeCaracteres.get(i) + "\tCódigo: "+ complemento +Integer.toBinaryString(i).toString());
+            complemento = "";
+        }
+        System.out.println("\n\tComo o arquivo possui "+frequenciaTotal+" caracteres, é necessária uma cadeia de");
+        System.out.println("\t"+ frequenciaTotal + " * "+qtdbits + " = "+frequenciaTotal*qtdbits + " bits para armazenar o arquivo.");
+        System.out.println("");
+        System.err.print("\n\t------ CONCLUSÃO DO EXERCÍCIO ------\n");
+        System.out.println("\tConsiderando o método normal de armazenamento (um caracter ocupa 1 byte = 8 bits), tem-se:");
+        int tamOriginal = frequenciaTotal*8;
+        int tamReduzido = frequenciaTotal*qtdbits;
+        System.out.println("\tTamanho do arquivo pelo método convencional   : "+ frequenciaTotal+ " * 8 = " +tamOriginal+" bits");
+        System.out.println("\tTamanho do arquivo pelo método de tamanho fixo: "+ frequenciaTotal+ " * "+qtdbits+" = " +tamReduzido+" bits,");
+        System.out.println("\tRESULTADO FINAL: "+(tamOriginal-tamReduzido)+ " bits a menos - redução de "+(((tamOriginal-tamReduzido)*100)/tamOriginal)+"%");
+        System.err.print("\t------------------------------------");
+
+    }
+}

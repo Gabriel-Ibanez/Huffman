@@ -1,0 +1,111 @@
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println("================================================================");
+        System.out.println("IESB 20201 - Análise de Algoritmos - Professor Felippe Rodrigues");
+        System.out.println("Programa Compressor Huffman.  Aluno: Gabriel Ibañez - 1812130004");
+        System.out.println("================================================================\n");
+
+        File file = new File("C:\\Users\\ibane\\Desktop\\1GABRIEL\\2020\\IESB 2020\\DISCIPLINAS 20201\\Análise de Algoritmos\\Huffman\\S2.txt");
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+        String line = null;
+
+        List<String> textoOriginal = new ArrayList<String>();
+        List<Nodo> listaDeNodos = new ArrayList<>();
+        List<Nodo> novaListaDeNodos = new ArrayList<>();
+        List<Character> listaDeCaracteres = new ArrayList<>();
+
+        Nodo nodo = new Nodo( " ","","",0);
+        int frequenciaTotal = 0;
+
+        while((line = bufferedReader.readLine()) != null) {
+            line = line.trim();
+            for (int i = 0; i < line.length(); i++) {
+                if(!listaDeCaracteres.contains(line.charAt(i))) {
+                    listaDeCaracteres.add(line.charAt(i));
+                    Nodo nodo1 = new Nodo (""+line.charAt(i),"","",1);
+                    listaDeNodos.add(nodo1);
+                    frequenciaTotal++;
+                } else {
+                    listaDeNodos.get(listaDeCaracteres.indexOf(line.charAt(i))).f++;
+                    frequenciaTotal++;
+                }
+                textoOriginal.add(""+line.charAt(i));
+            }
+        }
+
+        for (int i = 0; i < listaDeNodos.size(); i++){
+            System.out.println(i+" Caracter " + listaDeNodos.get(i).caracter+ " Frequência: "+listaDeNodos.get(i).f);
+        }
+        System.out.println("\nFrequência total: " + frequenciaTotal+" caracteres no arquivo.");
+
+        System.out.println("\nMontando a árvore binária:");
+        int pos = 0,aux = 0;
+        //while (frequenciaTotal > 1){
+
+        while (!listaDeNodos.isEmpty()){
+            aux = frequenciaTotal;
+            for (int i = 0; i < listaDeNodos.size(); i++) {
+                if (listaDeNodos.get(i).f < aux) {
+                    aux = listaDeNodos.get(i).f;
+                    pos = i;
+                }
+            }
+          //  System.out.println("\nPos: " + pos);
+            novaListaDeNodos.add(listaDeNodos.get(pos));
+            listaDeNodos.remove(pos);
+            pos = 0;
+           // System.out.println("listaDeNodos.size(): " + listaDeNodos.size());
+
+        }
+
+        System.out.println("\nLista de frequência em ordem crescente:");
+        for (int i = 0; i < novaListaDeNodos.size(); i++){
+            System.out.println("Caracter " + novaListaDeNodos.get(i).caracter+ " Frequência: "+novaListaDeNodos.get(i).f);
+        }
+
+
+        //System.out.println("\nFrequência total: " + frequenciaTotal+" caracteres no arquivo.");
+
+        //Algoritmo de Huffman
+
+/*
+        for (String string : textoOriginal) {
+            System.out.print(string);
+        }
+*/
+
+
+
+
+
+        /*
+        String s1, s2, nomeArquivo = "C:\\Users\\ibane\\Desktop\\1GABRIEL\\2020\\IESB 2020\\DISCIPLINAS 20201\\Análise de Algoritmos\\Huffman\\S1.txt";
+        String linha = new String();
+
+        File arq = new File(nomeArquivo);
+        if (arq.exists()) {
+           // Scanner scanner = new Scanner(new FileReader(nomeArquivo)).useDelimiter(";|\\n");
+
+            Scanner scanner = new Scanner(new FileReader(nomeArquivo)).useDelimiter("\\n");
+            while (scanner.hasNext()) {
+                System.out.println( scanner.next() );
+            }
+            scanner.close();
+        }
+*/
+        System.err.print("Fim!\n");
+
+    }
+}

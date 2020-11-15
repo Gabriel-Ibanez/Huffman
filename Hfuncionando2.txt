@@ -1,0 +1,108 @@
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println("================================================================");
+        System.out.println("IESB 20201 - Análise de Algoritmos - Professor Felippe Rodrigues");
+        System.out.println("Programa Compressor Huffman.  Aluno: Gabriel Ibañez - 1812130004");
+        System.out.println("================================================================\n");
+
+        File file = new File("C:\\Users\\ibane\\Desktop\\1GABRIEL\\2020\\IESB 2020\\DISCIPLINAS 20201\\Análise de Algoritmos\\Huffman\\S2.txt");
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+        String line = null;
+
+        List<String> textoOriginal = new ArrayList<String>();
+        List<Nodo> listaDeNodos = new ArrayList<>();
+        List<Nodo> novaListaDeNodos = new ArrayList<>();
+        List<Character> listaDeCaracteres = new ArrayList<>();
+
+        Nodo nodo = new Nodo( " ","","",0);
+        int frequenciaTotal = 0;
+
+        while((line = bufferedReader.readLine()) != null) {
+            line = line.trim();
+            for (int i = 0; i < line.length(); i++) {
+                if(!listaDeCaracteres.contains(line.charAt(i))) {
+                    listaDeCaracteres.add(line.charAt(i));
+                    Nodo nodo1 = new Nodo (""+line.charAt(i),"","",1);
+                    listaDeNodos.add(nodo1);
+                    frequenciaTotal++;
+                } else {
+                    listaDeNodos.get(listaDeCaracteres.indexOf(line.charAt(i))).f++;
+                    frequenciaTotal++;
+                }
+                textoOriginal.add(""+line.charAt(i));
+            }
+        }
+
+        System.out.println("Lista de frequência de cada caracter do arquivo:");
+        for (int i = 0; i < listaDeNodos.size(); i++){
+            System.out.println(" Caracter " + listaDeNodos.get(i).caracter+ " Frequência: "+listaDeNodos.get(i).f);
+
+        }
+        System.out.println("\nFrequência total: " + frequenciaTotal+" caracteres no arquivo.");
+
+
+        int pos = 0,aux = 0;
+        //while (frequenciaTotal > 1){
+
+        Nodo s0 = new Nodo("","","",0);
+        Nodo s1 = new Nodo("","","",0);
+
+
+        while (listaDeNodos.size() > 1){
+            // procura a posição do caracter com menor frequência:
+            aux = frequenciaTotal;
+            for (int i = 0; i < listaDeNodos.size(); i++) {
+                if (listaDeNodos.get(i).f < aux) {
+                    aux = listaDeNodos.get(i).f;
+                    pos = i;
+                }
+            }
+            s0.caracter = listaDeNodos.get(pos).caracter;
+            s0.f = listaDeNodos.get(pos).f;
+            //System.out.println("1º Menor nodo:" +  listaDeNodos.get(pos).caracter);
+            novaListaDeNodos.add(listaDeNodos.get(pos));
+            listaDeNodos.remove(pos);
+            pos = 0;
+
+            aux = frequenciaTotal;
+            for (int i = 0; i < listaDeNodos.size(); i++) {
+                if (listaDeNodos.get(i).f < aux) {
+                    aux = listaDeNodos.get(i).f;
+                    pos = i;
+                }
+            }
+            s1.caracter = listaDeNodos.get(pos).caracter;
+            s1.f = listaDeNodos.get(pos).f;
+            //System.out.println("2º Menor nodo:" +  listaDeNodos.get(pos).caracter);
+            novaListaDeNodos.add(listaDeNodos.get(pos));
+            listaDeNodos.remove(pos);
+            pos = 0;
+
+            Nodo X = new Nodo(s0.caracter+"+"+s1.caracter,s0.caracter,s1.caracter,s0.f+s1.f);
+            listaDeNodos.add(X);
+            novaListaDeNodos.add(X);
+        }
+        System.out.println("\nÁrvore de Huffman em ordem crescente de frequência (das folhas até a raiz):");
+        for (int i = 0; i < novaListaDeNodos.size(); i++){
+            System.out.println("Nodo " + novaListaDeNodos.get(i).caracter+ " Frequência: "+novaListaDeNodos.get(i).f);
+        }
+
+        //    System.out.println("\nMontando a árvore binária:");
+
+        System.err.print("Fim!\n");
+
+    }
+
+}
